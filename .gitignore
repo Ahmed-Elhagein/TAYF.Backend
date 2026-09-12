@@ -1,0 +1,41 @@
+﻿# ===== .NET =====
+bin/
+obj/
+*.user
+*.suo
+*.userprefs
+
+# ===== Visual Studio =====
+.vs/
+
+# ===== Build results =====
+[Dd]ebug/
+[Rr]elease/
+
+# ===== Logs & PID =====
+*.log
+*.pid
+
+# ===== Claude / MCP =====
+.claude/
+.mcp.json
+
+# ===== Secrets & Local config =====
+appsettings.Development.json
+appsettings.Local.json
+*.env
+secrets.json
+
+# ===== Database files =====
+*.db
+*.db-shm
+*.db-wal
+
+# ===== Test results =====
+[Tt]est[Rr]esult*/
+TestResults/
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
+Desktop.ini

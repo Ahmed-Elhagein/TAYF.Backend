@@ -1,0 +1,6 @@
+@TAYF.API_HostAddress = http://localhost:5134
+
+GET {{TAYF.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
