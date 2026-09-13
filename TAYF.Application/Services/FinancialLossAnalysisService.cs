@@ -56,4 +56,35 @@ public class FinancialLossAnalysisService : IFinancialLossAnalysisService
             EstimatedLoss = estimatedLoss
         };
     }
+
+    public async Task<TariffInfoDto> GetTariffInfoAsync(int plantId, string? tariffType)
+    {
+        // Get the plant with its tariffs
+        var plant = await _context.Plants
+            .Include(p => p.Tariffs)
+            .FirstOrDefaultAsync(p => p.Id == plantId);
+
+        if (plant == null)
+        {
+            throw new ArgumentException($"Plant with ID {plantId} not found.");
+        }
+
+        if (!plant.Tariffs.Any())
+        {
+            throw new InvalidOperationException($"Plant with ID {plantId} has no tariffs defined.");
+        }
+
+        // Use the first tariff (assuming one tariff per plant)
+        var tariff = plant.Tariffs.First();
+
+        // If a tariff type is provided, we would normally look for a matching tariff.
+        // However, the current model assumes one tariff per plant, so we ignore the override for simplicity.
+        // In a more complex scenario, we would filter by tariff type.
+
+        return new TariffInfoDto
+        {
+            TariffRate = tariff.Rate,
+            Currency = tariff.Currency.ToString()
+        };
+    }
 }

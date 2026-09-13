@@ -54,7 +54,7 @@ public class EnergyLossAnalysisService : IEnergyLossAnalysisService
 
         var expectedEnergyKwh = results.Sum(r => r.ExpectedEnergyKwh);
         var actualEnergyKwh = results.Sum(r => r.ActualEnergyKwh);
-        var energyLossKwh = results.Sum(r => r.EnergyLossKwh); // Alternatively, could be expectedEnergyKwh - actualEnergyKwh
+        var energyLossKwh = results.Sum(r => r.EnergyLossKwh);
 
         // Find the record with the highest energy loss to get the primary cause
         var primaryCauseRecord = results.OrderByDescending(r => r.EnergyLossKwh).FirstOrDefault();
