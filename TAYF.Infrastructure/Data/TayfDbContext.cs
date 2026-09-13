@@ -399,7 +399,7 @@ public class TayfDbContext : DbContext, IApplicationDbContext
             entity.Property(e => e.Currency)
                 .IsRequired()
                 .ValueGeneratedOnAdd()
-                .HasDefaultValue(1)
+                .HasDefaultValue(Currency.EGP)
                 .HasColumnType("int");
 
             entity.HasIndex(e => e.IsAnomaly)
@@ -446,7 +446,7 @@ public class TayfDbContext : DbContext, IApplicationDbContext
             entity.Property(e => e.Currency)
                 .HasColumnType("int")
                 .ValueGeneratedOnAdd()
-                .HasDefaultValue(1);
+                .HasDefaultValue(Currency.EGP);
 
             entity.Property(e => e.PlantId)
                 .HasColumnType("int");

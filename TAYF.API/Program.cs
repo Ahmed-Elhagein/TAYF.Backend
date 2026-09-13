@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using TAYF.Infrastructure;
 using TAYF.Application.Services;
 using TAYF.Application.Validators;
@@ -6,12 +6,17 @@ using TAYF.Infrastructure.Data;
 using TAYF.Domain.Enums;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Hosting;
+
 using TAYF.Application.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+
+// ✅ ضيف السطرين دول
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 // Add Entity Framework Core services
 builder.Services.AddDbContext<TayfDbContext>(options =>
@@ -46,6 +51,8 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
+    app.UseSwagger();        // ✅ ضيف ده
+    app.UseSwaggerUI();      // ✅ وضيف ده
 }
 
 app.UseHttpsRedirection();
