@@ -22,4 +22,12 @@ public class TelemetryController : ControllerBase
         var result = await _telemetryService.IngestTelemetry(telemetryDto);
         return Ok(result);
     }
+
+    // GET: api/v1/telemetry
+    [HttpGet]
+    public async Task<ActionResult<PagedResult<TelemetryHistoryDto>>> GetTelemetryHistory([FromQuery] TelemetryQueryDto query)
+    {
+        var result = await _telemetryService.GetTelemetryHistoryAsync(query);
+        return Ok(result);
+    }
 }

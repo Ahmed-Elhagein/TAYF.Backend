@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TAYF.Domain.Enums;
 using TAYF.Domain.Entities;
 using TAYF.Application.Interfaces;
+using TAYF.Infrastructure.Seed;
 
 namespace TAYF.Infrastructure.Data;
 /// <summary>
@@ -41,6 +43,7 @@ public class TayfDbContext : DbContext, IApplicationDbContext
         ConfigureMaintenanceActionEntity(modelBuilder);
         ConfigureRepairVerificationEntity(modelBuilder);
         ConfigureTelemetryProcessingCheckpointEntity(modelBuilder);
+        TayfSeedData.Seed(modelBuilder);
     }
 
     private void ConfigurePlantEntity(ModelBuilder modelBuilder)
@@ -89,20 +92,7 @@ public class TayfDbContext : DbContext, IApplicationDbContext
                 .HasDefaultValue(true)
                 .HasColumnType("bit");
 
-            entity.HasData(
-                new Plant
-                {
-                    Id = 1,
-                    Name = "Solar Plant A - Cairo",
-                    Location = "Cairo, Egypt",
-                    CapacityKw = 500m,
-                    TariffType = TAYF.Domain.Enums.TariffType.NetMetering,
-                    TariffRate = 1.25m,
-                    Currency = TAYF.Domain.Enums.Currency.EGP,
-                    InstallationDate = new DateTime(2023, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                    IsActive = true
-                });
-        });
+                    });
     }
 
     private void ConfigureInverterEntity(ModelBuilder modelBuilder)
@@ -148,58 +138,7 @@ public class TayfDbContext : DbContext, IApplicationDbContext
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
 
-            entity.HasData(
-                new Inverter
-                {
-                    Id = 1,
-                    SerialNumber = "INV-CAIRO-001",
-                    Model = "SUN2000-100KTL",
-                    MaxPowerKw = 100m,
-                    InstallationDate = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                    IsActive = true,
-                    PlantId = 1
-                },
-                new Inverter
-                {
-                    Id = 2,
-                    SerialNumber = "INV-CAIRO-002",
-                    Model = "SUN2000-100KTL",
-                    MaxPowerKw = 100m,
-                    InstallationDate = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                    IsActive = true,
-                    PlantId = 1
-                },
-                new Inverter
-                {
-                    Id = 3,
-                    SerialNumber = "INV-CAIRO-003",
-                    Model = "SUN2000-100KTL",
-                    MaxPowerKw = 100m,
-                    InstallationDate = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                    IsActive = true,
-                    PlantId = 1
-                },
-                new Inverter
-                {
-                    Id = 4,
-                    SerialNumber = "INV-CAIRO-004",
-                    Model = "SUN2000-100KTL",
-                    MaxPowerKw = 100m,
-                    InstallationDate = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                    IsActive = true,
-                    PlantId = 1
-                },
-                new Inverter
-                {
-                    Id = 5,
-                    SerialNumber = "INV-CAIRO-005",
-                    Model = "SUN2000-100KTL",
-                    MaxPowerKw = 100m,
-                    InstallationDate = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                    IsActive = true,
-                    PlantId = 1
-                });
-        });
+                    });
     }
 
     private void ConfigureTelemetryEntity(ModelBuilder modelBuilder)
@@ -262,78 +201,7 @@ public class TayfDbContext : DbContext, IApplicationDbContext
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
 
-            entity.HasData(
-                new Telemetry
-                {
-                    Id = 1,
-                    DcPowerKw = 0m,
-                    AcPowerKw = 0.03m,
-                    DailyYield = 164,
-                    TotalYield = 1000L,
-                    AmbientTemperature = 22m,
-                    ModuleTemperature = 22m,
-                    Irradiance = 0,
-                    Timestamp = new DateTime(2026, 9, 4, 19, 19, 35, 646, DateTimeKind.Utc).AddTicks(6110),
-                    InverterId = 1,
-                    PlantId = 1
-                },
-                new Telemetry
-                {
-                    Id = 2,
-                    DcPowerKw = 0m,
-                    AcPowerKw = 0.1m,
-                    DailyYield = 624,
-                    TotalYield = 2000L,
-                    AmbientTemperature = 21m,
-                    ModuleTemperature = 22.22m,
-                    Irradiance = 49,
-                    Timestamp = new DateTime(2026, 9, 4, 19, 19, 35, 646, DateTimeKind.Utc).AddTicks(6110),
-                    InverterId = 2,
-                    PlantId = 1
-                },
-                new Telemetry
-                {
-                    Id = 3,
-                    DcPowerKw = 0m,
-                    AcPowerKw = 2.85m,
-                    DailyYield = 17098,
-                    TotalYield = 3000L,
-                    AmbientTemperature = 19m,
-                    ModuleTemperature = 19m,
-                    Irradiance = 0,
-                    Timestamp = new DateTime(2026, 9, 4, 19, 19, 35, 646, DateTimeKind.Utc).AddTicks(6110),
-                    InverterId = 3,
-                    PlantId = 1
-                },
-                new Telemetry
-                {
-                    Id = 4,
-                    DcPowerKw = 1.62m,
-                    AcPowerKw = 0m,
-                    DailyYield = 0,
-                    TotalYield = 4000L,
-                    AmbientTemperature = 21m,
-                    ModuleTemperature = 21m,
-                    Irradiance = 0,
-                    Timestamp = new DateTime(2026, 9, 4, 19, 19, 35, 646, DateTimeKind.Utc).AddTicks(6110),
-                    InverterId = 4,
-                    PlantId = 1
-                },
-                new Telemetry
-                {
-                    Id = 5,
-                    DcPowerKw = 0m,
-                    AcPowerKw = 2.95m,
-                    DailyYield = 17687,
-                    TotalYield = 5000L,
-                    AmbientTemperature = 17m,
-                    ModuleTemperature = 17m,
-                    Irradiance = 0,
-                    Timestamp = new DateTime(2026, 9, 4, 19, 19, 35, 646, DateTimeKind.Utc).AddTicks(6110),
-                    InverterId = 5,
-                    PlantId = 1
-                });
-        });
+                    });
     }
 
     private void ConfigureAnalysisResultEntity(ModelBuilder modelBuilder)
@@ -459,16 +327,7 @@ public class TayfDbContext : DbContext, IApplicationDbContext
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
 
-            entity.HasData(
-                new Tariff
-                {
-                    Id = 1,
-                    Rate = 1.25m,
-                    Type = TAYF.Domain.Enums.TariffType.NetMetering,
-                    Currency = TAYF.Domain.Enums.Currency.EGP,
-                    PlantId = 1
-                });
-        });
+                    });
     }
 
     private void ConfigureMaintenanceActionEntity(ModelBuilder modelBuilder)
@@ -535,11 +394,12 @@ public class TayfDbContext : DbContext, IApplicationDbContext
             entity.Property(e => e.MaintenanceActionId)
                 .HasColumnType("int");
 
-            entity.Property(e => e.PerformanceBefore)
-                .HasColumnType("decimal(5,2)");
+            entity.Property(e => e.PerformanceBefore).HasColumnType("decimal(18,2)");
+            entity.Property(e => e.PerformanceAfter).HasColumnType("decimal(18,2)");
 
-            entity.Property(e => e.PerformanceAfter)
-                .HasColumnType("decimal(5,2)");
+            entity.Property(e => e.ExpectedPowerKw)
+                .HasColumnType("decimal(18,2)")
+                .HasDefaultValue(0m);
 
             entity.Property(e => e.RecoveryPct)
                 .HasColumnType("decimal(5,2)");
@@ -595,5 +455,29 @@ public class TayfDbContext : DbContext, IApplicationDbContext
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
         });
+
+        // Apply UTC DateTime value converter to all DateTime properties
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        {
+            foreach (var property in entityType.GetProperties())
+            {
+                if (property.ClrType == typeof(DateTime))
+                {
+                    property.SetValueConverter(new ValueConverter<DateTime, DateTime>(
+                        v => v.Kind == DateTimeKind.Utc ? v : v.ToUniversalTime(),
+                        v => DateTime.SpecifyKind(v, DateTimeKind.Utc)));
+                }
+                else if (property.ClrType == typeof(DateTime?))
+                {
+                    property.SetValueConverter(new ValueConverter<DateTime?, DateTime?>(
+                        v => v.HasValue
+                            ? (v.Value.Kind == DateTimeKind.Utc ? v.Value : v.Value.ToUniversalTime())
+                            : v,
+                        v => v.HasValue
+                            ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc)
+                            : v));
+                }
+            }
+        }
     }
 }

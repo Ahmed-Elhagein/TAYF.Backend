@@ -8,6 +8,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Hosting;
 
 using TAYF.Application.Interfaces;
+using TAYF.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,12 +26,16 @@ builder.Services.AddDbContext<TayfDbContext>(options =>
 // Add the application DbContext interface registration
 builder.Services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<TayfDbContext>());
 
+// Configure RepairVerificationSettings
+builder.Services.Configure<RepairVerificationSettings>(builder.Configuration.GetSection("RepairVerificationSettings"));
+
 // Add application services
 builder.Services.AddScoped<ITelemetryService, TelemetryService>();
 builder.Services.AddScoped<IExpectedPowerService, BaselineExpectedPowerService>();
 builder.Services.AddScoped<IAnomalyDetectionService, AnomalyDetectionService>();
 builder.Services.AddScoped<IPlantStatusService, PlantStatusService>();
 builder.Services.AddScoped<IRootCauseService, RootCauseService>();
+builder.Services.AddScoped<IRepairVerificationService, RepairVerificationService>();
 
 builder.Services.AddScoped<IAlertService, AlertService>();
 builder.Services.AddScoped<IEnergyLossAnalysisService, EnergyLossAnalysisService>();

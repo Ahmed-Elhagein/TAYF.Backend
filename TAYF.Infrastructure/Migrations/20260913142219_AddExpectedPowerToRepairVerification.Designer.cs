@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TAYF.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using TAYF.Infrastructure.Data;
 namespace TAYF.Infrastructure.Migrations
 {
     [DbContext(typeof(TayfDbContext))]
-    partial class TayfDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260913142219_AddExpectedPowerToRepairVerification")]
+    partial class AddExpectedPowerToRepairVerification
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -75,7 +78,7 @@ namespace TAYF.Infrastructure.Migrations
 
                     b.HasIndex("PlantId");
 
-                    b.ToTable("Alerts", (string)null);
+                    b.ToTable("Alerts");
                 });
 
             modelBuilder.Entity("TAYF.Domain.Entities.AnalysisResult", b =>

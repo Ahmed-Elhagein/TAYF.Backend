@@ -77,7 +77,9 @@ public class TelemetryService : ITelemetryService
         {
             PlantId = telemetryDto.PlantId,
             InverterId = telemetryDto.InverterId,
-            Timestamp = timestamp,
+            Timestamp = timestamp.Kind == DateTimeKind.Utc
+                ? timestamp
+                : DateTime.SpecifyKind(timestamp.ToUniversalTime(), DateTimeKind.Utc),
             AcPowerKw = (decimal)telemetryDto.AcPowerKw,
             DcPowerKw = (decimal)telemetryDto.DcPowerKw,
             Irradiance = (int)telemetryDto.Irradiance, // Assuming irradiance is stored as integer
@@ -96,6 +98,80 @@ public class TelemetryService : ITelemetryService
         {
             TelemetryId = telemetry.Id,
             Received = true
+        };
+    }
+
+    /// <summary>
+    /// Retrieves historical telemetry data with filtering and pagination.
+    /// </summary>
+    /// <param name="query">The query parameters for filtering and pagination.</param>
+    /// <returns>A paged result of telemetry history DTOs.</returns>
+    public async Task<PagedResult<TelemetryHistoryDto>> GetTelemetryHistoryAsync(TelemetryQueryDto query)
+    {
+        // Start with all telemetry records
+        var queryable = _context.TelemetryRecords.AsQueryable();
+
+        // Apply filters
+        if (query.PlantId.HasValue)
+        {
+            queryable = queryable.Where(t => t.PlantId == query.PlantId.Value);
+        }
+
+        if (query.InverterId.HasValue)
+        {
+            queryable = queryable.Where(t => t.InverterId == query.InverterId.Value);
+        }
+
+        if (query.From.HasValue)
+        {
+            queryable = queryable.Where(t => t.Timestamp >= query.From.Value);
+        }
+
+        if (query.To.HasValue)
+        {
+            queryable = queryable.Where(t => t.Timestamp <= query.To.Value);
+        }
+
+        // Order by timestamp descending (newest first)
+        queryable = queryable.OrderByDescending(t => t.Timestamp);
+
+        // Get total count for pagination
+        var totalCount = await queryable.CountAsync();
+
+        // Calculate total pages
+        var totalPages = (int)Math.Ceiling(totalCount / (double)query.PageSize);
+
+        // Ensure page number is within valid range
+        var validPageNumber = Math.Max(1, Math.Min(query.Page, totalPages == 0 ? 1 : totalPages));
+
+        // Apply pagination
+        var items = await queryable
+            .Skip((validPageNumber - 1) * query.PageSize)
+            .Take(query.PageSize)
+            .Select(t => new TelemetryHistoryDto
+            {
+                Id = t.Id,
+                PlantId = t.PlantId,
+                InverterId = t.InverterId,
+                Timestamp = t.Timestamp,
+                AcPowerKw = t.AcPowerKw,
+                DcPowerKw = t.DcPowerKw,
+                Irradiance = t.Irradiance,
+                AmbientTemperature = t.AmbientTemperature,
+                ModuleTemperature = t.ModuleTemperature,
+                DailyYield = t.DailyYield,
+                TotalYield = t.TotalYield
+            })
+            .ToListAsync();
+
+        // Return paged result
+        return new PagedResult<TelemetryHistoryDto>
+        {
+            Items = items,
+            PageNumber = validPageNumber,
+            PageSize = query.PageSize,
+            TotalCount = totalCount,
+            TotalPages = totalPages
         };
     }
 }

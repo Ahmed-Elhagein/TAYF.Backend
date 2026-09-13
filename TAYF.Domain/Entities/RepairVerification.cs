@@ -14,13 +14,19 @@ public class RepairVerification
     [Required]
     public int MaintenanceActionId { get; set; }
 
-    [Required]
-    [Column(TypeName = "decimal(5,2)")]
-    public decimal PerformanceBefore { get; set; } // Performance metric before maintenance (e.g., efficiency % or power output)
 
     [Required]
-    [Column(TypeName = "decimal(5,2)")]
-    public decimal PerformanceAfter { get; set; } // Performance metric after maintenance
+    [Column(TypeName = "decimal(18,2)")]
+    public decimal PerformanceBefore { get; set; }
+
+    [Required]
+    [Column(TypeName = "decimal(18,2)")]
+    public decimal PerformanceAfter { get; set; }
+
+
+    [Required]
+    [Column(TypeName = "decimal(18,2)")]
+    public decimal ExpectedPowerKw { get; set; } // Expected power under same conditions (for recovery calculation)
 
     [Required]
     [Column(TypeName = "decimal(5,2)")]
