@@ -41,6 +41,7 @@ builder.Services.AddScoped<IAlertService, AlertService>();
 builder.Services.AddScoped<IEnergyLossAnalysisService, EnergyLossAnalysisService>();
 builder.Services.AddScoped<IFinancialLossAnalysisService, FinancialLossAnalysisService>();
 builder.Services.AddScoped<IEconomicImpactService, EconomicImpactService>();
+builder.Services.AddScoped<IPerformanceService, PerformanceService>();
 
 // Add infrastructure services
 builder.Services.AddSingleton<IRootCauseModelClient, MockRootCauseModelClient>();
