@@ -18,7 +18,7 @@ namespace TAYF.Infrastructure.Seed
 {
     /// <summary>
     /// Seeds the database with soiling analysis results based on meteorological data.
-    /// </>
+    /// </summary>
     public class SoilingAnalysisSeeder
     {
         private readonly TayfDbContext _context;
@@ -27,8 +27,6 @@ namespace TAYF.Infrastructure.Seed
         /// <summary>
         /// Initializes a new instance of the <see cref="SoilingAnalysisSeeder"/> class.
         /// </summary>
-        /// <param name="context">The database context.</param>
-        /// <param name="logger">The logger for logging messages.</param>
         public SoilingAnalysisSeeder(
             TayfDbContext context,
             ILogger<SoilingAnalysisSeeder> logger)
@@ -42,7 +40,6 @@ namespace TAYF.Infrastructure.Seed
         /// </summary>
         public async Task SeedAsync(CancellationToken cancellationToken = default)
         {
-            
             _logger.LogInformation("SoilingAnalysisSeeder: Starting to seed soiling analysis results");
 
             // Get plant information for tariff rate and currency
@@ -88,15 +85,16 @@ namespace TAYF.Infrastructure.Seed
                 .GroupBy(t => t.Timestamp.Date)
                 .ToDictionary(g => g.Key, g => g.ToList());
 
-            // Kimber model parameters
-            const double dailySoilingRate = 0.0004; // 0.04% per day
-            const double rainCleaningThreshold = 1.0; // 1.0 mm
-            const double maxSoilingLoss = 0.30; // 30% maximum
-            const double residualAfterRain = 0.005; // 0.5% residual after rain
+            // Kimber model parameters (simplified for demo: no rain reset)
+            const double dailySoilingRate = 0.004;     // 0.4% per day
+            const double maxSoilingLoss = 0.15;        // 15% maximum
 
             // Process each day
             var analysisResults = new List<AnalysisResult>();
             int processedDays = 0;
+
+            // ✅ IMPORTANT: soilingLoss is declared OUTSIDE the loop so it ACCUMULATES
+            double soilingLoss = 0.0;
 
             foreach (var dayEntry in meteoByDay.OrderBy(kvp => kvp.Key))
             {
@@ -119,23 +117,11 @@ namespace TAYF.Infrastructure.Seed
                 // Calculate daily energy production in kWh
                 double dailyEnergyKwh = dayTelemetryRecords.Sum(t => (double)t.AcPowerKw);
 
-                // Apply Kimber soiling model
-                double soilingLoss = 0.0; // Start with no soiling
-
-                // Simple daily accumulation model (in reality, this would be more complex)
-                // For each day, if there's rain above threshold, reset to residual
-                // Otherwise, accumulate soiling up to maximum
-                if (dailyPrecipitationMm >= rainCleaningThreshold)
+                // Apply Kimber soiling model — accumulate daily (no rain reset for demo simplicity)
+                soilingLoss += dailySoilingRate;
+                if (soilingLoss > maxSoilingLoss)
                 {
-                    soilingLoss = residualAfterRain;
-                }
-                else
-                {
-                    soilingLoss += dailySoilingRate;
-                    if (soilingLoss > maxSoilingLoss)
-                    {
-                        soilingLoss = maxSoilingLoss;
-                    }
+                    soilingLoss = maxSoilingLoss;
                 }
 
                 // Calculate energy loss
@@ -163,19 +149,18 @@ namespace TAYF.Infrastructure.Seed
                     severity = Severity.Critical;
                 }
 
-                // Create AnalysisResult record
                 // For soiling analysis that affects the whole plant, we'll assign it to the first inverter
-                int inverterIdForSoiling = 1; // Default to first inverter
+                int inverterIdForSoiling = 1;
 
                 var analysisResult = new AnalysisResult
                 {
                     PlantId = 1,
                     InverterId = inverterIdForSoiling,
                     Timestamp = date.Date.AddDays(1).AddTicks(-1), // End of day
-                    ActualPowerKw = (decimal)dailyEnergyKwh, // Simplified - using daily total as instantaneous
+                    ActualPowerKw = (decimal)dailyEnergyKwh,
                     ExpectedPowerKw = (decimal)(dailyEnergyKwh / (1 - soilingLoss)),
                     DeviationPct = (decimal)(-soilingLoss * 100),
-                    IsAnomaly = soilingLoss > 0.05, // Consider it an anomaly if loss > 5%
+                    IsAnomaly = soilingLoss > 0.05,
                     Severity = severity,
                     AnomalyScore = (decimal)soilingLoss,
                     PrimaryCause = "Soiling",
@@ -184,7 +169,7 @@ namespace TAYF.Infrastructure.Seed
                     EnergyLossKwh = (decimal)energyLossKwh,
                     ExpectedEnergyKwh = (decimal)expectedEnergyKwh,
                     ActualEnergyKwh = (decimal)dailyEnergyKwh,
-                    EstimatedLoss = (decimal)energyLossKwh, // Simplified
+                    EstimatedLoss = (decimal)energyLossKwh,
                     Currency = plant.Currency,
                     CreatedAt = DateTime.UtcNow
                 };
@@ -221,9 +206,9 @@ namespace TAYF.Infrastructure.Seed
             using var reader = new StreamReader(filePath);
             var config = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
-                MissingFieldFound = null, // ignore missing fields
-                HeaderValidated = null,   // ignore header validation
-                BadDataFound = null,      // ignore bad data
+                MissingFieldFound = null,
+                HeaderValidated = null,
+                BadDataFound = null,
                 IgnoreBlankLines = true,
             };
             using var csv = new CsvReader(reader, config);
@@ -236,17 +221,13 @@ namespace TAYF.Infrastructure.Seed
 
             _logger.LogInformation("SoilingAnalysisSeeder: Read {Count} meteorological records from CSV", records.Count);
             return records;
-
-
-
-            //var records = await csv.GetRecordsAsync<MeteorologicalScadaRecord>(cancellationToken).ToListAsync(cancellationToken);
-            //return records;
         }
 
         private string GetFilePath(string fileName)
         {
             // We don't have IHostEnvironment here, so we'll use a relative path from the content root
             var contentRoot = AppDomain.CurrentDomain.BaseDirectory;
+
             // Navigate up to find the project root
             while (!Directory.Exists(Path.Combine(contentRoot, "TAYF.Infrastructure", "Seed", "pv_scada")) &&
                    contentRoot != Path.GetPathRoot(contentRoot))

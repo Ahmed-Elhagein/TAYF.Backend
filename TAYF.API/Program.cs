@@ -49,15 +49,18 @@ builder.Services.AddSingleton<IScadaStreamPublisher, ChannelScadaStreamPublisher
 builder.Services.AddSingleton<IScadaSimulationClock, ScadaSimulationClock>();
 builder.Services.AddHostedService<ScadaSimulationBackgroundService>();
 
-// Plant Dashboard
-builder.Services.AddScoped<IPlantDashboardService, PlantDashboardService>();
-
 builder.Services.AddSingleton<IRootCauseModelClient, MockRootCauseModelClient>();
 
 builder.Services.AddScoped<TelemetryDtoValidator>();
 
 builder.Services.AddMemoryCache();
 builder.Services.AddHostedService<TelemetryAnalysisBackgroundService>();
+
+// Cleaning Decision
+builder.Services.AddScoped<ICleaningDecisionService, CleaningDecisionService>();
+
+// Plant Dashboard
+builder.Services.AddScoped<IPlantDashboardService, PlantDashboardService>();
 
 builder.Services.AddCors(options =>
 {

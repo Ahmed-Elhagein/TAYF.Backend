@@ -99,11 +99,11 @@ namespace TAYF.Infrastructure.Scada
                 yield return new InverterScadaReading(
                     record.Timestamp,
                     record.InverterId,
-                    record.DcPowerKw,
-                    record.AcPowerKw,
-                    record.DcVoltageV,
-                    record.DcCurrentA,
-                    record.ModuleTempC,
+                    record.DcPowerKw ?? 0,
+                    record.AcPowerKw ?? 0,
+                    record.DcVoltageV ?? 0,
+                    record.DcCurrentA ?? 0,
+                    record.ModuleTempC ?? 0,
                     record.InverterEfficiency,
                     record.StatusCode);
             }
@@ -142,17 +142,17 @@ namespace TAYF.Infrastructure.Scada
                 yield return new MeteorologicalReading(
                     record.StationId,
                     record.ReadingTime,
-                    record.GhiWm2,
-                    record.DniWm2,
-                    record.DhiWm2,
-                    record.AmbientTemp,
+                    record.GhiWm2 ?? 0,
+                    record.DniWm2 ?? 0,
+                    record.DhiWm2 ?? 0,
+                    record.AmbientTemp ?? 0,
                     record.TempUnit,
-                    record.WindSpeedMs,
-                    record.RelativeHumidityPct,
-                    record.BarometricPressureHpa,
-                    record.SolarZenithAngleDeg,
-                    record.CloudOpacityPct,
-                    record.PrecipitationMm);
+                    record.WindSpeedMs ?? 0,
+                    record.RelativeHumidityPct ?? 0,
+                    record.BarometricPressureHpa ?? 0,
+                    record.SolarZenithAngleDeg ?? 0,
+                    record.CloudOpacityPct ?? 0,
+                    record.PrecipitationMm ?? 0);
             }
         }
 
@@ -189,13 +189,13 @@ namespace TAYF.Infrastructure.Scada
                 yield return new GridExportReading(
                     record.ExportTimestamp,
                     record.InverterId,
-                    record.EnergyKwh,
-                    record.ReactivePowerKvar,
+                    record.EnergyKwh ?? 0,
+                    record.ReactivePowerKvar ?? 0,
                     record.CurtailmentFlag,
-                    record.TariffRate,
-                    record.RevenueUsd,
-                    record.PowerFactor,
-                    record.FrequencyHz);
+                    record.TariffRate ?? 0,
+                    record.RevenueUsd ?? 0,
+                    record.PowerFactor ?? 0,
+                    record.FrequencyHz ?? 0);
             }
         }
 
@@ -252,15 +252,15 @@ namespace TAYF.Infrastructure.Scada
         [Name("inverter_id")]
         public string InverterId { get; set; } = null!;
         [Name("dc_power_kw")]
-        public double DcPowerKw { get; set; }
+        public double? DcPowerKw { get; set; }
         [Name("ac_power_kw")]
-        public double AcPowerKw { get; set; }
+        public double? AcPowerKw { get; set; }
         [Name("dc_voltage_v")]
-        public double DcVoltageV { get; set; }
+        public double? DcVoltageV { get; set; }
         [Name("dc_current_a")]
-        public double DcCurrentA { get; set; }
+        public double? DcCurrentA { get; set; }
         [Name("module_temp_c")]
-        public double ModuleTempC { get; set; }
+        public double? ModuleTempC { get; set; }
         [Name("inverter_efficiency")]
         public double? InverterEfficiency { get; set; }
         [Name("status_code")]
@@ -278,27 +278,27 @@ namespace TAYF.Infrastructure.Scada
         [Name("reading_time")]
         public DateTime ReadingTime { get; set; }
         [Name("ghi_wm2")]
-        public double GhiWm2 { get; set; }
+        public double? GhiWm2 { get; set; }
         [Name("dni_wm2")]
-        public double DniWm2 { get; set; }
+        public double? DniWm2 { get; set; }
         [Name("dhi_wm2")]
-        public double DhiWm2 { get; set; }
+        public double? DhiWm2 { get; set; }
         [Name("ambient_temp")]
-        public double AmbientTemp { get; set; }
+        public double? AmbientTemp { get; set; }
         [Name("temp_unit")]
         public string TempUnit { get; set; } = null!;
         [Name("wind_speed_ms")]
-        public double WindSpeedMs { get; set; }
+        public double? WindSpeedMs { get; set; }
         [Name("relative_humidity_pct")]
-        public double RelativeHumidityPct { get; set; }
+        public double? RelativeHumidityPct { get; set; }
         [Name("barometric_pressure_hpa")]
-        public double BarometricPressureHpa { get; set; }
+        public double? BarometricPressureHpa { get; set; }
         [Name("solar_zenith_angle_deg")]
-        public double SolarZenithAngleDeg { get; set; }
+        public double? SolarZenithAngleDeg { get; set; }
         [Name("cloud_opacity_pct")]
-        public double CloudOpacityPct { get; set; }
+        public double? CloudOpacityPct { get; set; }
         [Name("precipitation_mm")]
-        public double PrecipitationMm { get; set; }
+        public double? PrecipitationMm { get; set; }
 
         public DateTime Timestamp => ReadingTime;
         public string InverterId { get; set; } = null!; // Not in CSV but required for interface
@@ -314,19 +314,19 @@ namespace TAYF.Infrastructure.Scada
         [Name("inverter_id")]
         public string InverterId { get; set; } = null!;
         [Name("energy_kwh")]
-        public double EnergyKwh { get; set; }
+        public double? EnergyKwh { get; set; }
         [Name("reactive_power_kvar")]
-        public double ReactivePowerKvar { get; set; }
+        public double? ReactivePowerKvar { get; set; }
         [Name("curtailment_flag")]
         public bool CurtailmentFlag { get; set; }
         [Name("tariff_rate")]
-        public double TariffRate { get; set; }
+        public double? TariffRate { get; set; }
         [Name("revenue_usd")]
-        public double RevenueUsd { get; set; }
+        public double? RevenueUsd { get; set; }
         [Name("power_factor")]
-        public double PowerFactor { get; set; }
+        public double? PowerFactor { get; set; }
         [Name("frequency_hz")]
-        public double FrequencyHz { get; set; }
+        public double? FrequencyHz { get; set; }
 
         public DateTime Timestamp => ExportTimestamp;
         public string StationId { get; set; } = null!; // Not in CSV but required for interface
