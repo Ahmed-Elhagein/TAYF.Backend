@@ -56,7 +56,6 @@ builder.Services.AddHttpClient<IRootCauseModelClient, TAYF.Infrastructure.Ai.AiR
     client.Timeout = TimeSpan.FromSeconds(30);
 });
 
-
 builder.Services.AddScoped<TelemetryDtoValidator>();
 
 builder.Services.AddMemoryCache();
@@ -81,21 +80,23 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Apply migrations
-using (var scope = app.Services.CreateScope())
+// Apply migrations and Seed ONLY in Development
+if (app.Environment.IsDevelopment())
 {
-    var db = scope.ServiceProvider.GetRequiredService<TayfDbContext>();
-    await db.Database.MigrateAsync();
-}
+    using (var scope = app.Services.CreateScope())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<TayfDbContext>();
+        await db.Database.MigrateAsync();
+    }
 
-// Seed the database
-using (var scope = app.Services.CreateScope())
-{
-    var scadaSeeder = scope.ServiceProvider.GetRequiredService<ScadaCsvSeeder>();
-    await scadaSeeder.SeedAsync();
+    using (var scope = app.Services.CreateScope())
+    {
+        var scadaSeeder = scope.ServiceProvider.GetRequiredService<ScadaCsvSeeder>();
+        await scadaSeeder.SeedAsync();
 
-    var soilingSeeder = scope.ServiceProvider.GetRequiredService<SoilingAnalysisSeeder>();
-    await soilingSeeder.SeedAsync();
+        var soilingSeeder = scope.ServiceProvider.GetRequiredService<SoilingAnalysisSeeder>();
+        await soilingSeeder.SeedAsync();
+    }
 }
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
