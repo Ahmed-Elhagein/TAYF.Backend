@@ -87,4 +87,66 @@ public class MockRootCauseModelClient : IRootCauseModelClient
 
         return Task.FromResult(probabilities);
     }
+
+    public Task<IRootCauseModelClient.RootCausePrediction> PredictFromDatasetAsync(
+        IRootCauseModelClient.PvFaultInput input,
+        CancellationToken ct = default)
+    {
+        // Mock response — deterministic based on input
+        var hasFault = input.Vdc1 < 100 || input.Vdc2 < 100
+                    || input.Idc1 < 1 || input.Idc2 < 1;
+
+        if (hasFault)
+        {
+            return Task.FromResult(new IRootCauseModelClient.RootCausePrediction
+            {
+                TopClass = "Open Circuit",
+                Classification = new Dictionary<string, double>
+                {
+                    { "Normal", 5.0 },
+                    { "Short-Circuit", 10.0 },
+                    { "Degradation", 5.0 },
+                    { "Open Circuit", 75.0 },
+                    { "Shadowing", 5.0 }
+                },
+                Causes = new Dictionary<string, double>
+                {
+                    { "Soiling", 5.0 },
+                    { "Module Temperature", 10.0 },
+                    { "String/MC4 Fault", 80.0 },
+                    { "Inverter Thermal Derating", 5.0 }
+                },
+                Confidence = 75.0,
+                Status = "Open Circuit Detected",
+                PTotal = (input.Vdc1 + input.Vdc2) * (input.Idc1 + input.Idc2) / 2,
+                PExpected = 4000,
+                Deviation = -0.5
+            });
+        }
+
+        return Task.FromResult(new IRootCauseModelClient.RootCausePrediction
+        {
+            TopClass = "Normal",
+            Classification = new Dictionary<string, double>
+            {
+                { "Normal", 95.67 },
+                { "Short-Circuit", 0.0 },
+                { "Degradation", 0.0 },
+                { "Open Circuit", 0.0 },
+                { "Shadowing", 4.33 }
+            },
+            Causes = new Dictionary<string, double>
+            {
+                { "Soiling", 8.0 },
+                { "Module Temperature", 49.7 },
+                { "String/MC4 Fault", 0.0 },
+                { "Inverter Thermal Derating", 42.3 }
+            },
+            Confidence = 95.7,
+            Status = "Normal Operation",
+            PTotal = 6069.83,
+            PExpected = 4095.61,
+            Deviation = 0.482
+        });
+    }
 }

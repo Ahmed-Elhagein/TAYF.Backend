@@ -31,5 +31,13 @@
       <Link>Seed\pv_scada\%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+
+
+	  <Content Include="..\TAYF.Infrastructure\Seed\pv_fault\pv_fault_dataset.csv">
+		  <Link>Seed\pv_fault\pv_fault_dataset.csv</Link>
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  
+	  
   </ItemGroup>
 </Project>

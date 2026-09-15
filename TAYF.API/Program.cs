@@ -49,7 +49,13 @@ builder.Services.AddSingleton<IScadaStreamPublisher, ChannelScadaStreamPublisher
 builder.Services.AddSingleton<IScadaSimulationClock, ScadaSimulationClock>();
 builder.Services.AddHostedService<ScadaSimulationBackgroundService>();
 
-builder.Services.AddSingleton<IRootCauseModelClient, MockRootCauseModelClient>();
+builder.Services.AddHttpClient<IRootCauseModelClient, TAYF.Infrastructure.Ai.AiRootCauseModelClient>(client =>
+{
+    client.BaseAddress = new Uri(
+        builder.Configuration["AiModel:BaseUrl"] ?? "http://localhost:8000");
+    client.Timeout = TimeSpan.FromSeconds(30);
+});
+
 
 builder.Services.AddScoped<TelemetryDtoValidator>();
 
