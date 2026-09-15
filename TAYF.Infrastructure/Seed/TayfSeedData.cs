@@ -44,57 +44,21 @@ public static class TayfSeedData
 
     private static void SeedInverters(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Inverter>().HasData(
-            new Inverter
+        var inverters = new List<Inverter>();
+        for (int i = 1; i <= 20; i++)
+        {
+            inverters.Add(new Inverter
             {
-                Id = 1,
-                SerialNumber = "INV-CAIRO-001",
+                Id = i,
+                PlantId = 1,
+                SerialNumber = $"INV-CAIRO-{i:D3}",
                 Model = "SUN2000-100KTL",
                 MaxPowerKw = 100m,
                 InstallationDate = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                IsActive = true,
-                PlantId = 1
-            },
-            new Inverter
-            {
-                Id = 2,
-                SerialNumber = "INV-CAIRO-002",
-                Model = "SUN2000-100KTL",
-                MaxPowerKw = 100m,
-                InstallationDate = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                IsActive = true,
-                PlantId = 1
-            },
-            new Inverter
-            {
-                Id = 3,
-                SerialNumber = "INV-CAIRO-003",
-                Model = "SUN2000-100KTL",
-                MaxPowerKw = 100m,
-                InstallationDate = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                IsActive = true,
-                PlantId = 1
-            },
-            new Inverter
-            {
-                Id = 4,
-                SerialNumber = "INV-CAIRO-004",
-                Model = "SUN2000-100KTL",
-                MaxPowerKw = 100m,
-                InstallationDate = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                IsActive = true,
-                PlantId = 1
-            },
-            new Inverter
-            {
-                Id = 5,
-                SerialNumber = "INV-CAIRO-005",
-                Model = "SUN2000-100KTL",
-                MaxPowerKw = 100m,
-                InstallationDate = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                IsActive = true,
-                PlantId = 1
+                IsActive = true
             });
+        }
+        modelBuilder.Entity<Inverter>().HasData(inverters);
     }
 
     private static void SeedTariffs(ModelBuilder modelBuilder)
@@ -238,226 +202,226 @@ public static class TayfSeedData
 
             modelBuilder.Entity<Telemetry>().HasData(all);
         }
-        }
-
-        private static void SeedMaintenanceActions(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<MaintenanceAction>().HasData(
-                new MaintenanceAction
-                {
-                    Id = 1,
-                    PlantId = 1,
-                    InverterId = 1,
-                    ActionType = ActionType.Repair,
-                    StartedAt = new DateTime(2026, 8, 25, 10, 0, 0, DateTimeKind.Utc),
-                    CompletedAt = new DateTime(2026, 8, 27, 14, 30, 0, DateTimeKind.Utc),
-                    Description = "Inverter 1 repair - underperformance fix"
-                },
-                new MaintenanceAction
-                {
-                    Id = 2,
-                    PlantId = 1,
-                    InverterId = 2,
-                    ActionType = ActionType.Inspection,
-                    StartedAt = new DateTime(2026, 8, 28, 9, 0, 0, DateTimeKind.Utc),
-                    CompletedAt = null,
-                    Description = "Inverter 2 scheduled inspection"
-                },
-                new MaintenanceAction
-                {
-                    Id = 3,
-                    PlantId = 1,
-                    InverterId = 3,
-                    ActionType = ActionType.Cleaning,
-                    StartedAt = new DateTime(2026, 9, 1, 7, 0, 0, DateTimeKind.Utc),
-                    CompletedAt = new DateTime(2026, 9, 1, 11, 30, 0, DateTimeKind.Utc),
-                    Description = "Panel cleaning - inverter 3"
-                }
-            );
-        }
-
-        private static void SeedRepairVerifications(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<RepairVerification>().HasData(
-                new RepairVerification
-                {
-                    Id = 1,
-                    MaintenanceActionId = 1,
-                    PerformanceBefore = 2800m,
-                    PerformanceAfter = 4300m,
-                    ExpectedPowerKw = 4500m,
-                    RecoveryPct = 88.24m,
-                    IsStable = true,
-                    Verified = false,
-                    VerifiedAt = new DateTime(2026, 8, 28, 10, 0, 0, DateTimeKind.Utc)
-                }
-            );
-        }
-
-        private static void SeedAnalysisResults(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<AnalysisResult>().HasData(
-                new AnalysisResult
-                {
-                    Id = 1,
-                    PlantId = 1,
-                    InverterId = 1,
-                    Timestamp = new DateTime(2026, 9, 1, 12, 0, 0, DateTimeKind.Utc),
-                    ActualPowerKw = 82m,
-                    ExpectedPowerKw = 85m,
-                    DeviationPct = -3.5m,
-                    IsAnomaly = false,
-                    Severity = Severity.Low,
-                    AnomalyScore = 0.15m,
-                    PrimaryCause = "Normal",
-                    CauseProbabilities = "{}",
-                    ConfidenceScore = 0.9m,
-                    EnergyLossKwh = 12m,
-                    ExpectedEnergyKwh = 300m,
-                    ActualEnergyKwh = 288m,
-                    EstimatedLoss = 156m,
-                    Currency = Currency.EGP,
-                    CreatedAt = new DateTime(2026, 9, 1, 12, 0, 0, DateTimeKind.Utc)
-                },
-                new AnalysisResult
-                {
-                    Id = 2,
-                    PlantId = 1,
-                    InverterId = 2,
-                    Timestamp = new DateTime(2026, 9, 1, 12, 0, 0, DateTimeKind.Utc),
-                    ActualPowerKw = 75m,
-                    ExpectedPowerKw = 85m,
-                    DeviationPct = -11.8m,
-                    IsAnomaly = true,
-                    Severity = Severity.Medium,
-                    AnomalyScore = 0.65m,
-                    PrimaryCause = "Soiling",
-                    CauseProbabilities = "{\"Soiling\":0.7,\"Shading\":0.2,\"Degradation\":0.1}",
-                    ConfidenceScore = 0.8m,
-                    EnergyLossKwh = 28m,
-                    ExpectedEnergyKwh = 300m,
-                    ActualEnergyKwh = 272m,
-                    EstimatedLoss = 364m,
-                    Currency = Currency.EGP,
-                    CreatedAt = new DateTime(2026, 9, 1, 12, 0, 0, DateTimeKind.Utc)
-                },
-                new AnalysisResult
-                {
-                    Id = 3,
-                    PlantId = 1,
-                    InverterId = 3,
-                    Timestamp = new DateTime(2026, 9, 1, 12, 0, 0, DateTimeKind.Utc),
-                    ActualPowerKw = 68m,
-                    ExpectedPowerKw = 85m,
-                    DeviationPct = -20.0m,
-                    IsAnomaly = true,
-                    Severity = Severity.High,
-                    AnomalyScore = 0.85m,
-                    PrimaryCause = "Electrical Issue",
-                    CauseProbabilities = "{\"Electrical Issue\":0.8,\"Shading\":0.15,\"Connection\":0.05}",
-                    ConfidenceScore = 0.75m,
-                    EnergyLossKwh = 42m,
-                    ExpectedEnergyKwh = 300m,
-                    ActualEnergyKwh = 258m,
-                    EstimatedLoss = 546m,
-                    Currency = Currency.EGP,
-                    CreatedAt = new DateTime(2026, 9, 1, 12, 0, 0, DateTimeKind.Utc)
-                },
-                new AnalysisResult
-                {
-                    Id = 4,
-                    PlantId = 1,
-                    InverterId = 4,
-                    Timestamp = new DateTime(2026, 9, 1, 12, 0, 0, DateTimeKind.Utc),
-                    ActualPowerKw = 60m,
-                    ExpectedPowerKw = 80m,
-                    DeviationPct = -25.0m,
-                    IsAnomaly = true,
-                    Severity = Severity.Critical,
-                    AnomalyScore = 0.92m,
-                    PrimaryCause = "Inverter Fault",
-                    CauseProbabilities = "{\"Inverter Fault\":0.85,\"Wiring\":0.1,\"Other\":0.05}",
-                    ConfidenceScore = 0.88m,
-                    EnergyLossKwh = 50m,
-                    ExpectedEnergyKwh = 320m,
-                    ActualEnergyKwh = 270m,
-                    EstimatedLoss = 650m,
-                    Currency = Currency.EGP,
-                    CreatedAt = new DateTime(2026, 9, 1, 12, 0, 0, DateTimeKind.Utc)
-                },
-                new AnalysisResult
-                {
-                    Id = 5,
-                    PlantId = 1,
-                    InverterId = 5,
-                    Timestamp = new DateTime(2026, 9, 1, 12, 0, 0, DateTimeKind.Utc),
-                    ActualPowerKw = 88m,
-                    ExpectedPowerKw = 90m,
-                    DeviationPct = -2.2m,
-                    IsAnomaly = false,
-                    Severity = Severity.Low,
-                    AnomalyScore = 0.12m,
-                    PrimaryCause = "Normal",
-                    CauseProbabilities = "{}",
-                    ConfidenceScore = 0.92m,
-                    EnergyLossKwh = 8m,
-                    ExpectedEnergyKwh = 320m,
-                    ActualEnergyKwh = 312m,
-                    EstimatedLoss = 104m,
-                    Currency = Currency.EGP,
-                    CreatedAt = new DateTime(2026, 9, 1, 12, 0, 0, DateTimeKind.Utc)
-                }
-            );
-        }
-
-        private static void SeedAlerts(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Alert>().HasData(
-                new Alert
-                {
-                    Id = 1,
-                    PlantId = 1,
-                    InverterId = 2,
-                    Severity = Severity.Medium,
-                    Problem = "Underperformance detected",
-                    RootCause = "Soiling",
-                    EnergyLossKwh = 320m,
-                    FinancialLoss = 4160m,
-                    Currency = Currency.EGP,
-                    RecommendedAction = "Schedule cleaning",
-                    CreatedAt = new DateTime(2026, 9, 2, 8, 0, 0, DateTimeKind.Utc),
-                    IsResolved = false
-                },
-                new Alert
-                {
-                    Id = 2,
-                    PlantId = 1,
-                    InverterId = 3,
-                    Severity = Severity.High,
-                    Problem = "Significant underperformance",
-                    RootCause = "Electrical issue detected",
-                    EnergyLossKwh = 480m,
-                    FinancialLoss = 6240m,
-                    Currency = Currency.EGP,
-                    RecommendedAction = "Inspect wiring and connections",
-                    CreatedAt = new DateTime(2026, 9, 2, 9, 0, 0, DateTimeKind.Utc),
-                    IsResolved = false
-                },
-                new Alert
-                {
-                    Id = 3,
-                    PlantId = 1,
-                    InverterId = 4,
-                    Severity = Severity.Critical,
-                    Problem = "Critical inverter fault",
-                    RootCause = "Inverter failure imminent",
-                    EnergyLossKwh = 640m,
-                    FinancialLoss = 8320m,
-                    Currency = Currency.EGP,
-                    RecommendedAction = "Replace inverter immediately",
-                    CreatedAt = new DateTime(2026, 9, 2, 10, 0, 0, DateTimeKind.Utc),
-                    IsResolved = false
-                }
-            );
-        }
     }
+
+    private static void SeedMaintenanceActions(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<MaintenanceAction>().HasData(
+            new MaintenanceAction
+            {
+                Id = 1,
+                PlantId = 1,
+                InverterId = 1,
+                ActionType = ActionType.Repair,
+                StartedAt = new DateTime(2026, 8, 25, 10, 0, 0, DateTimeKind.Utc),
+                CompletedAt = new DateTime(2026, 8, 27, 14, 30, 0, DateTimeKind.Utc),
+                Description = "Inverter 1 repair - underperformance fix"
+            },
+            new MaintenanceAction
+            {
+                Id = 2,
+                PlantId = 1,
+                InverterId = 2,
+                ActionType = ActionType.Inspection,
+                StartedAt = new DateTime(2026, 8, 28, 9, 0, 0, DateTimeKind.Utc),
+                CompletedAt = null,
+                Description = "Inverter 2 scheduled inspection"
+            },
+            new MaintenanceAction
+            {
+                Id = 3,
+                PlantId = 1,
+                InverterId = 3,
+                ActionType = ActionType.Cleaning,
+                StartedAt = new DateTime(2026, 9, 1, 7, 0, 0, DateTimeKind.Utc),
+                CompletedAt = new DateTime(2026, 9, 1, 11, 30, 0, DateTimeKind.Utc),
+                Description = "Panel cleaning - inverter 3"
+            }
+        );
+    }
+
+    private static void SeedRepairVerifications(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<RepairVerification>().HasData(
+            new RepairVerification
+            {
+                Id = 1,
+                MaintenanceActionId = 1,
+                PerformanceBefore = 2800m,
+                PerformanceAfter = 4300m,
+                ExpectedPowerKw = 4500m,
+                RecoveryPct = 88.24m,
+                IsStable = true,
+                Verified = false,
+                VerifiedAt = new DateTime(2026, 8, 28, 10, 0, 0, DateTimeKind.Utc)
+            }
+        );
+    }
+
+    private static void SeedAnalysisResults(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<AnalysisResult>().HasData(
+            new AnalysisResult
+            {
+                Id = 1,
+                PlantId = 1,
+                InverterId = 1,
+                Timestamp = new DateTime(2026, 9, 1, 12, 0, 0, DateTimeKind.Utc),
+                ActualPowerKw = 82m,
+                ExpectedPowerKw = 85m,
+                DeviationPct = -3.5m,
+                IsAnomaly = false,
+                Severity = Severity.Low,
+                AnomalyScore = 0.15m,
+                PrimaryCause = "Normal",
+                CauseProbabilities = "{}",
+                ConfidenceScore = 0.9m,
+                EnergyLossKwh = 12m,
+                ExpectedEnergyKwh = 300m,
+                ActualEnergyKwh = 288m,
+                EstimatedLoss = 156m,
+                Currency = Currency.EGP,
+                CreatedAt = new DateTime(2026, 9, 1, 12, 0, 0, DateTimeKind.Utc)
+            },
+            new AnalysisResult
+            {
+                Id = 2,
+                PlantId = 1,
+                InverterId = 2,
+                Timestamp = new DateTime(2026, 9, 1, 12, 0, 0, DateTimeKind.Utc),
+                ActualPowerKw = 75m,
+                ExpectedPowerKw = 85m,
+                DeviationPct = -11.8m,
+                IsAnomaly = true,
+                Severity = Severity.Medium,
+                AnomalyScore = 0.65m,
+                PrimaryCause = "Soiling",
+                CauseProbabilities = "{\"Soiling\":0.7,\"Shading\":0.2,\"Degradation\":0.1}",
+                ConfidenceScore = 0.8m,
+                EnergyLossKwh = 28m,
+                ExpectedEnergyKwh = 300m,
+                ActualEnergyKwh = 272m,
+                EstimatedLoss = 364m,
+                Currency = Currency.EGP,
+                CreatedAt = new DateTime(2026, 9, 1, 12, 0, 0, DateTimeKind.Utc)
+            },
+            new AnalysisResult
+            {
+                Id = 3,
+                PlantId = 1,
+                InverterId = 3,
+                Timestamp = new DateTime(2026, 9, 1, 12, 0, 0, DateTimeKind.Utc),
+                ActualPowerKw = 68m,
+                ExpectedPowerKw = 85m,
+                DeviationPct = -20.0m,
+                IsAnomaly = true,
+                Severity = Severity.High,
+                AnomalyScore = 0.85m,
+                PrimaryCause = "Electrical Issue",
+                CauseProbabilities = "{\"Electrical Issue\":0.8,\"Shading\":0.15,\"Connection\":0.05}",
+                ConfidenceScore = 0.75m,
+                EnergyLossKwh = 42m,
+                ExpectedEnergyKwh = 300m,
+                ActualEnergyKwh = 258m,
+                EstimatedLoss = 546m,
+                Currency = Currency.EGP,
+                CreatedAt = new DateTime(2026, 9, 1, 12, 0, 0, DateTimeKind.Utc)
+            },
+            new AnalysisResult
+            {
+                Id = 4,
+                PlantId = 1,
+                InverterId = 4,
+                Timestamp = new DateTime(2026, 9, 1, 12, 0, 0, DateTimeKind.Utc),
+                ActualPowerKw = 60m,
+                ExpectedPowerKw = 80m,
+                DeviationPct = -25.0m,
+                IsAnomaly = true,
+                Severity = Severity.Critical,
+                AnomalyScore = 0.92m,
+                PrimaryCause = "Inverter Fault",
+                CauseProbabilities = "{\"Inverter Fault\":0.85,\"Wiring\":0.1,\"Other\":0.05}",
+                ConfidenceScore = 0.88m,
+                EnergyLossKwh = 50m,
+                ExpectedEnergyKwh = 320m,
+                ActualEnergyKwh = 270m,
+                EstimatedLoss = 650m,
+                Currency = Currency.EGP,
+                CreatedAt = new DateTime(2026, 9, 1, 12, 0, 0, DateTimeKind.Utc)
+            },
+            new AnalysisResult
+            {
+                Id = 5,
+                PlantId = 1,
+                InverterId = 5,
+                Timestamp = new DateTime(2026, 9, 1, 12, 0, 0, DateTimeKind.Utc),
+                ActualPowerKw = 88m,
+                ExpectedPowerKw = 90m,
+                DeviationPct = -2.2m,
+                IsAnomaly = false,
+                Severity = Severity.Low,
+                AnomalyScore = 0.12m,
+                PrimaryCause = "Normal",
+                CauseProbabilities = "{}",
+                ConfidenceScore = 0.92m,
+                EnergyLossKwh = 8m,
+                ExpectedEnergyKwh = 320m,
+                ActualEnergyKwh = 312m,
+                EstimatedLoss = 104m,
+                Currency = Currency.EGP,
+                CreatedAt = new DateTime(2026, 9, 1, 12, 0, 0, DateTimeKind.Utc)
+            }
+        );
+    }
+
+    private static void SeedAlerts(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Alert>().HasData(
+            new Alert
+            {
+                Id = 1,
+                PlantId = 1,
+                InverterId = 2,
+                Severity = Severity.Medium,
+                Problem = "Underperformance detected",
+                RootCause = "Soiling",
+                EnergyLossKwh = 320m,
+                FinancialLoss = 4160m,
+                Currency = Currency.EGP,
+                RecommendedAction = "Schedule cleaning",
+                CreatedAt = new DateTime(2026, 9, 2, 8, 0, 0, DateTimeKind.Utc),
+                IsResolved = false
+            },
+            new Alert
+            {
+                Id = 2,
+                PlantId = 1,
+                InverterId = 3,
+                Severity = Severity.High,
+                Problem = "Significant underperformance",
+                RootCause = "Electrical issue detected",
+                EnergyLossKwh = 480m,
+                FinancialLoss = 6240m,
+                Currency = Currency.EGP,
+                RecommendedAction = "Inspect wiring and connections",
+                CreatedAt = new DateTime(2026, 9, 2, 9, 0, 0, DateTimeKind.Utc),
+                IsResolved = false
+            },
+            new Alert
+            {
+                Id = 3,
+                PlantId = 1,
+                InverterId = 4,
+                Severity = Severity.Critical,
+                Problem = "Critical inverter fault",
+                RootCause = "Inverter failure imminent",
+                EnergyLossKwh = 640m,
+                FinancialLoss = 8320m,
+                Currency = Currency.EGP,
+                RecommendedAction = "Replace inverter immediately",
+                CreatedAt = new DateTime(2026, 9, 2, 10, 0, 0, DateTimeKind.Utc),
+                IsResolved = false
+            }
+        );
+    }
+}

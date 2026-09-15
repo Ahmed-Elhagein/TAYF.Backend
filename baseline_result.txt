@@ -1,0 +1,26 @@
+﻿{
+    "overallDeviationPct":  90.08027690903879,
+    "dataPoints":  [
+                       {
+                           "timestamp":  "2025-04-01T06:00:00Z",
+                           "expectedPowerKw":  5.329892,
+                           "actualPowerKw":  11.7,
+                           "deviationPct":  119.51664311396928,
+                           "isAnomaly":  false
+                       },
+                       {
+                           "timestamp":  "2025-04-01T06:00:00Z",
+                           "expectedPowerKw":  5.35406,
+                           "actualPowerKw":  10.68,
+                           "deviationPct":  99.47479109311439,
+                           "isAnomaly":  false
+                       },
+                       {
+                           "timestamp":  "2025-04-01T06:00:00Z",
+                           "expectedPowerKw":  5.298728,
+                           "actualPowerKw":  9.54,
+                           "deviationPct":  80.04321037048892,
+                           "isAnomaly":  false
+                       }
+                   ]
+}

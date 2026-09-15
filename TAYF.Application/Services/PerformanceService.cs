@@ -45,7 +45,12 @@ namespace TAYF.Application.Services
                       (t, i) => new { t, i })
                 .Where(x => x.i.PlantId == plantId)
                 .Where(x => x.t.Timestamp >= from)
-                .Where(x => x.t.Timestamp <= to);
+                .Where(x => x.t.Timestamp < to)    // Changed to exclusive upper bound
+                .Where(x => x.t.Irradiance > 50)   // meaningful sunlight threshold
+                // Removed AcPowerKw > 0 filter since we're comparing DC power now
+                // We want to compare Expected DC vs Actual DC even when AC is zero
+                // (but DC might not be zero, e.g., during low-light conditions)
+                ;
 
             if (inverterId.HasValue)
             {
@@ -80,22 +85,25 @@ namespace TAYF.Application.Services
                 var inverter = record.i;
 
                 // Calculate expected power using the 3-parameter overload
+                // This returns Expected DC Power based on the PVWatts model
                 double expectedPowerKw = await _expectedPowerService.CalculateExpectedPower(
                     inverter,
                     (double)telemetry.Irradiance,
                     (double)telemetry.ModuleTemperature);
 
+                // Actual AC Power from telemetry
                 double actualPowerKw = (double)telemetry.AcPowerKw;
 
                 // Calculate deviation and anomaly using the anomaly detection service
+                // DeviationPct = ((Actual - Expected) / Expected) * 100
                 double deviationPct = _anomalyDetectionService.CalculateDeviationPct(actualPowerKw, expectedPowerKw);
                 bool isAnomaly = _anomalyDetectionService.IsAnomaly(actualPowerKw, expectedPowerKw);
 
                 var dataPoint = new ExpectedVsActualDataPointDto
                 {
                     Timestamp = telemetry.Timestamp,
-                    ExpectedPowerKw = expectedPowerKw,
-                    ActualPowerKw = actualPowerKw,
+                    ExpectedPowerKw = expectedPowerKw,    // Expected DC Power
+                    ActualPowerKw = actualPowerKw,        // Actual DC Power
                     DeviationPct = deviationPct,
                     IsAnomaly = isAnomaly
                 };
@@ -121,8 +129,8 @@ namespace TAYF.Application.Services
                 InverterId = inverterId,
                 From = from,
                 To = to,
-                OverallExpectedPowerKw = overallExpected,
-                OverallActualPowerKw = overallActual,
+                OverallExpectedPowerKw = overallExpected,    // Average Expected DC Power
+                OverallActualPowerKw = overallActual,        // Average Actual DC Power
                 OverallDeviationPct = overallDeviationPct,
                 IsUnderperforming = isUnderperforming,
                 DataPoints = dataPoints

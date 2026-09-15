@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using TAYF.Infrastructure;
 using TAYF.Application.Services;
 using TAYF.Application.Validators;
@@ -9,6 +9,9 @@ using Microsoft.Extensions.Hosting;
 using TAYF.API.Middleware;
 using TAYF.Application.Interfaces;
 using TAYF.Application;
+using TAYF.Infrastructure.Seed;
+using TAYF.Application.Scada;
+using TAYF.Infrastructure.Scada;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +40,18 @@ builder.Services.AddScoped<IEconomicImpactService, EconomicImpactService>();
 builder.Services.AddScoped<IPerformanceService, PerformanceService>();
 builder.Services.AddScoped<IMaintenancePriorityService, MaintenancePriorityService>();
 
+builder.Services.AddScoped<ScadaCsvSeeder>();
+builder.Services.AddScoped<SoilingAnalysisSeeder>();
+
+// SCADA
+builder.Services.AddScoped<IScadaDataSource, CsvScadaDataSource>();
+builder.Services.AddSingleton<IScadaStreamPublisher, ChannelScadaStreamPublisher>();
+builder.Services.AddSingleton<IScadaSimulationClock, ScadaSimulationClock>();
+builder.Services.AddHostedService<ScadaSimulationBackgroundService>();
+
+// Plant Dashboard
+builder.Services.AddScoped<IPlantDashboardService, PlantDashboardService>();
+
 builder.Services.AddSingleton<IRootCauseModelClient, MockRootCauseModelClient>();
 
 builder.Services.AddScoped<TelemetryDtoValidator>();
@@ -44,7 +59,32 @@ builder.Services.AddScoped<TelemetryDtoValidator>();
 builder.Services.AddMemoryCache();
 builder.Services.AddHostedService<TelemetryAnalysisBackgroundService>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("FlutterDev", policy =>
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader());
+});
+
 var app = builder.Build();
+
+// Apply migrations
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<TayfDbContext>();
+    await db.Database.MigrateAsync();
+}
+
+// Seed the database
+using (var scope = app.Services.CreateScope())
+{
+    var scadaSeeder = scope.ServiceProvider.GetRequiredService<ScadaCsvSeeder>();
+    await scadaSeeder.SeedAsync();
+
+    var soilingSeeder = scope.ServiceProvider.GetRequiredService<SoilingAnalysisSeeder>();
+    await soilingSeeder.SeedAsync();
+}
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
@@ -55,6 +95,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("FlutterDev");
 
 app.UseAuthorization();
 

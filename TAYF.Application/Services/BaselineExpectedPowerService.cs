@@ -45,8 +45,8 @@ public class BaselineExpectedPowerService : IExpectedPowerService
             return Task.FromResult(0.0);
         }
 
-        // PVWatts formula: ExpectedPower = MaxPowerKw * (Irradiance / 1000) * [1 + γ * (ModuleTemperature - 25)]
-        double temperatureCorrection = 1.0 + (TemperatureCoefficientGamma * (moduleTemperature - 25.0));
+        // PVWatts formula: ExpectedPower = MaxPowerKw * (Irradiance / 1000) *  [1 + γ * (ModuleTemperature - 25)]
+        double temperatureCorrection = ( 1.0 + (TemperatureCoefficientGamma * (moduleTemperature - 25.0)));
         double expectedPower = ratedPowerKw * (irradiance / 1000.0) * temperatureCorrection;
 
         // Ensure expected power is not negative (though it shouldn't be with normal parameters)

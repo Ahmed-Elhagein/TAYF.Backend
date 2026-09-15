@@ -26,4 +26,10 @@
     <PackageReference Include="System.Text.Json" Version="10.0.12" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="..\TAYF.Infrastructure\Seed\pv_scada\*.csv">
+      <Link>Seed\pv_scada\%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>
