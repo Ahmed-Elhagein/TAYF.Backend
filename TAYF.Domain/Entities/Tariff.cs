@@ -18,7 +18,6 @@ public class Tariff
     public TariffType Type { get; set; }
 
     [Required]
-    [Column(TypeName = "decimal(18,4)")]
     public decimal Rate { get; set; }
 
     [Required]

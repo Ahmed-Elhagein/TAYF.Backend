@@ -21,7 +21,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<TayfDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<TayfDbContext>());
 
@@ -43,7 +43,6 @@ builder.Services.AddScoped<IMaintenancePriorityService, MaintenancePriorityServi
 builder.Services.AddScoped<ScadaCsvSeeder>();
 builder.Services.AddScoped<SoilingAnalysisSeeder>();
 
-// SCADA
 builder.Services.AddScoped<IScadaDataSource, CsvScadaDataSource>();
 builder.Services.AddSingleton<IScadaStreamPublisher, ChannelScadaStreamPublisher>();
 builder.Services.AddSingleton<IScadaSimulationClock, ScadaSimulationClock>();
@@ -61,13 +60,8 @@ builder.Services.AddScoped<TelemetryDtoValidator>();
 builder.Services.AddMemoryCache();
 builder.Services.AddHostedService<TelemetryAnalysisBackgroundService>();
 
-// Cleaning Decision
 builder.Services.AddScoped<ICleaningDecisionService, CleaningDecisionService>();
-
-// Plant Dashboard
 builder.Services.AddScoped<IPlantDashboardService, PlantDashboardService>();
-
-// Demo Scenario
 builder.Services.AddScoped<IDemoScenarioService, DemoScenarioService>();
 
 builder.Services.AddCors(options =>
@@ -80,7 +74,6 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Apply migrations and Seed ONLY in Development
 if (app.Environment.IsDevelopment())
 {
     using (var scope = app.Services.CreateScope())
@@ -101,18 +94,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// Swagger enabled always
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
-
 app.UseCors("FlutterDev");
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

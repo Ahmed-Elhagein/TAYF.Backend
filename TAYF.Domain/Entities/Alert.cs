@@ -29,11 +29,9 @@ public class Alert
     public string RootCause { get; set; } = null!;
 
     [Required]
-    [Column(TypeName = "decimal(18,2)")]
     public decimal FinancialLoss { get; set; }
 
     [Required]
-    [Column(TypeName = "decimal(18,2)")]
     public decimal EnergyLossKwh { get; set; }
 
     [Required]

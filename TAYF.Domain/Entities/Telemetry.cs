@@ -21,22 +21,18 @@ public class Telemetry
     public DateTime Timestamp { get; set; }
 
     [Required]
-    [Column(TypeName = "decimal(18,2)")]
     public decimal AcPowerKw { get; set; }
 
     [Required]
-    [Column(TypeName = "decimal(18,2)")]
     public decimal DcPowerKw { get; set; }
 
     [Required]
     public int Irradiance { get; set; } // in W/m²
 
     [Required]
-    [Column(TypeName = "decimal(5,2)")]
     public decimal AmbientTemperature { get; set; } // in Celsius
 
     [Required]
-    [Column(TypeName = "decimal(5,2)")]
     public decimal ModuleTemperature { get; set; } // in Celsius
 
     [Required]

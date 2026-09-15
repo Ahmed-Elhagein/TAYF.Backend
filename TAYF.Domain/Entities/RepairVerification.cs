@@ -16,20 +16,16 @@ public class RepairVerification
 
 
     [Required]
-    [Column(TypeName = "decimal(18,2)")]
     public decimal PerformanceBefore { get; set; }
 
     [Required]
-    [Column(TypeName = "decimal(18,2)")]
     public decimal PerformanceAfter { get; set; }
 
 
     [Required]
-    [Column(TypeName = "decimal(18,2)")]
     public decimal ExpectedPowerKw { get; set; } // Expected power under same conditions (for recovery calculation)
 
     [Required]
-    [Column(TypeName = "decimal(5,2)")]
     public decimal RecoveryPct { get; set; } // Percentage of performance recovered
 
     public bool IsStable { get; set; } // Whether the performance is stable after multiple readings

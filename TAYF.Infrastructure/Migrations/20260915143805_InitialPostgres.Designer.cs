@@ -2,9 +2,9 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TAYF.Infrastructure.Data;
 
 #nullable disable
@@ -12,8 +12,8 @@ using TAYF.Infrastructure.Data;
 namespace TAYF.Infrastructure.Migrations
 {
     [DbContext(typeof(TayfDbContext))]
-    [Migration("20260913185135_AddSeedDataForDemoAndTesting")]
-    partial class AddSeedDataForDemoAndTesting
+    [Migration("20260915143805_InitialPostgres")]
+    partial class InitialPostgres
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,35 +21,35 @@ namespace TAYF.Infrastructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.0")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("TAYF.Domain.Entities.Alert", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("Currency")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<decimal>("EnergyLossKwh")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric");
 
                     b.Property<decimal>("FinancialLoss")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric");
 
                     b.Property<int>("InverterId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsResolved")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<int>("PlantId")
                         .HasColumnType("int");
@@ -57,20 +57,20 @@ namespace TAYF.Infrastructure.Migrations
                     b.Property<string>("Problem")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("RecommendedAction")
                         .IsRequired()
                         .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("character varying(500)");
 
                     b.Property<string>("RootCause")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("character varying(200)");
 
                     b.Property<int>("Severity")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -134,26 +134,26 @@ namespace TAYF.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("ActualEnergyKwh")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric");
 
                     b.Property<decimal>("ActualPowerKw")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric(18,2)");
 
                     b.Property<decimal>("AnomalyScore")
-                        .HasColumnType("decimal(5,4)");
+                        .HasColumnType("numeric(5,4)");
 
                     b.Property<string>("CauseProbabilities")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("ConfidenceScore")
-                        .HasColumnType("decimal(5,4)");
+                        .HasColumnType("numeric(5,4)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("Currency")
                         .ValueGeneratedOnAdd()
@@ -161,25 +161,25 @@ namespace TAYF.Infrastructure.Migrations
                         .HasDefaultValue(1);
 
                     b.Property<decimal>("DeviationPct")
-                        .HasColumnType("decimal(18,4)");
+                        .HasColumnType("numeric(18,4)");
 
                     b.Property<decimal>("EnergyLossKwh")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric(18,2)");
 
                     b.Property<decimal>("EstimatedLoss")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric(18,2)");
 
                     b.Property<decimal>("ExpectedEnergyKwh")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric");
 
                     b.Property<decimal>("ExpectedPowerKw")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric(18,2)");
 
                     b.Property<int>("InverterId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsAnomaly")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<int>("PlantId")
                         .HasColumnType("int");
@@ -187,13 +187,13 @@ namespace TAYF.Infrastructure.Migrations
                     b.Property<string>("PrimaryCause")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("character varying(200)");
 
                     b.Property<int>("Severity")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -327,23 +327,23 @@ namespace TAYF.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("InstallationDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(true);
 
                     b.Property<decimal>("MaxPowerKw")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric(18,2)");
 
                     b.Property<string>("Model")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<int>("PlantId")
                         .HasColumnType("int");
@@ -351,7 +351,7 @@ namespace TAYF.Infrastructure.Migrations
                     b.Property<string>("SerialNumber")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
 
@@ -409,6 +409,156 @@ namespace TAYF.Infrastructure.Migrations
                             Model = "SUN2000-100KTL",
                             PlantId = 1,
                             SerialNumber = "INV-CAIRO-005"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            InstallationDate = new DateTime(2023, 1, 31, 22, 0, 0, 0, DateTimeKind.Utc),
+                            IsActive = true,
+                            MaxPowerKw = 100m,
+                            Model = "SUN2000-100KTL",
+                            PlantId = 1,
+                            SerialNumber = "INV-CAIRO-006"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            InstallationDate = new DateTime(2023, 1, 31, 22, 0, 0, 0, DateTimeKind.Utc),
+                            IsActive = true,
+                            MaxPowerKw = 100m,
+                            Model = "SUN2000-100KTL",
+                            PlantId = 1,
+                            SerialNumber = "INV-CAIRO-007"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            InstallationDate = new DateTime(2023, 1, 31, 22, 0, 0, 0, DateTimeKind.Utc),
+                            IsActive = true,
+                            MaxPowerKw = 100m,
+                            Model = "SUN2000-100KTL",
+                            PlantId = 1,
+                            SerialNumber = "INV-CAIRO-008"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            InstallationDate = new DateTime(2023, 1, 31, 22, 0, 0, 0, DateTimeKind.Utc),
+                            IsActive = true,
+                            MaxPowerKw = 100m,
+                            Model = "SUN2000-100KTL",
+                            PlantId = 1,
+                            SerialNumber = "INV-CAIRO-009"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            InstallationDate = new DateTime(2023, 1, 31, 22, 0, 0, 0, DateTimeKind.Utc),
+                            IsActive = true,
+                            MaxPowerKw = 100m,
+                            Model = "SUN2000-100KTL",
+                            PlantId = 1,
+                            SerialNumber = "INV-CAIRO-010"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            InstallationDate = new DateTime(2023, 1, 31, 22, 0, 0, 0, DateTimeKind.Utc),
+                            IsActive = true,
+                            MaxPowerKw = 100m,
+                            Model = "SUN2000-100KTL",
+                            PlantId = 1,
+                            SerialNumber = "INV-CAIRO-011"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            InstallationDate = new DateTime(2023, 1, 31, 22, 0, 0, 0, DateTimeKind.Utc),
+                            IsActive = true,
+                            MaxPowerKw = 100m,
+                            Model = "SUN2000-100KTL",
+                            PlantId = 1,
+                            SerialNumber = "INV-CAIRO-012"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            InstallationDate = new DateTime(2023, 1, 31, 22, 0, 0, 0, DateTimeKind.Utc),
+                            IsActive = true,
+                            MaxPowerKw = 100m,
+                            Model = "SUN2000-100KTL",
+                            PlantId = 1,
+                            SerialNumber = "INV-CAIRO-013"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            InstallationDate = new DateTime(2023, 1, 31, 22, 0, 0, 0, DateTimeKind.Utc),
+                            IsActive = true,
+                            MaxPowerKw = 100m,
+                            Model = "SUN2000-100KTL",
+                            PlantId = 1,
+                            SerialNumber = "INV-CAIRO-014"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            InstallationDate = new DateTime(2023, 1, 31, 22, 0, 0, 0, DateTimeKind.Utc),
+                            IsActive = true,
+                            MaxPowerKw = 100m,
+                            Model = "SUN2000-100KTL",
+                            PlantId = 1,
+                            SerialNumber = "INV-CAIRO-015"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            InstallationDate = new DateTime(2023, 1, 31, 22, 0, 0, 0, DateTimeKind.Utc),
+                            IsActive = true,
+                            MaxPowerKw = 100m,
+                            Model = "SUN2000-100KTL",
+                            PlantId = 1,
+                            SerialNumber = "INV-CAIRO-016"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            InstallationDate = new DateTime(2023, 1, 31, 22, 0, 0, 0, DateTimeKind.Utc),
+                            IsActive = true,
+                            MaxPowerKw = 100m,
+                            Model = "SUN2000-100KTL",
+                            PlantId = 1,
+                            SerialNumber = "INV-CAIRO-017"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            InstallationDate = new DateTime(2023, 1, 31, 22, 0, 0, 0, DateTimeKind.Utc),
+                            IsActive = true,
+                            MaxPowerKw = 100m,
+                            Model = "SUN2000-100KTL",
+                            PlantId = 1,
+                            SerialNumber = "INV-CAIRO-018"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            InstallationDate = new DateTime(2023, 1, 31, 22, 0, 0, 0, DateTimeKind.Utc),
+                            IsActive = true,
+                            MaxPowerKw = 100m,
+                            Model = "SUN2000-100KTL",
+                            PlantId = 1,
+                            SerialNumber = "INV-CAIRO-019"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            InstallationDate = new DateTime(2023, 1, 31, 22, 0, 0, 0, DateTimeKind.Utc),
+                            IsActive = true,
+                            MaxPowerKw = 100m,
+                            Model = "SUN2000-100KTL",
+                            PlantId = 1,
+                            SerialNumber = "INV-CAIRO-020"
                         });
                 });
 
@@ -418,18 +568,18 @@ namespace TAYF.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ActionType")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("CompletedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("character varying(500)");
 
                     b.Property<int?>("InverterId")
                         .HasColumnType("int");
@@ -438,7 +588,7 @@ namespace TAYF.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -486,10 +636,10 @@ namespace TAYF.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("CapacityKw")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric(18,2)");
 
                     b.Property<int>("Currency")
                         .ValueGeneratedOnAdd()
@@ -497,28 +647,28 @@ namespace TAYF.Infrastructure.Migrations
                         .HasDefaultValue(1);
 
                     b.Property<DateTime>("InstallationDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(true);
 
                     b.Property<string>("Location")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<decimal>("TariffRate")
-                        .HasColumnType("decimal(18,4)");
+                        .HasColumnType("numeric(18,4)");
 
                     b.Property<int>("TariffType")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -545,36 +695,36 @@ namespace TAYF.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("ExpectedPowerKw")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(18,2)")
+                        .HasColumnType("numeric(18,2)")
                         .HasDefaultValue(0m);
 
                     b.Property<int?>("InverterId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsStable")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<int>("MaintenanceActionId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("PerformanceAfter")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric(18,2)");
 
                     b.Property<decimal>("PerformanceBefore")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric(18,2)");
 
                     b.Property<decimal>("RecoveryPct")
-                        .HasColumnType("decimal(5,2)");
+                        .HasColumnType("numeric(5,2)");
 
                     b.Property<bool>("Verified")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime>("VerifiedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -605,7 +755,7 @@ namespace TAYF.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Currency")
                         .ValueGeneratedOnAdd()
@@ -616,7 +766,7 @@ namespace TAYF.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Rate")
-                        .HasColumnType("decimal(18,4)");
+                        .HasColumnType("numeric(18,4)");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
@@ -644,19 +794,19 @@ namespace TAYF.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("AcPowerKw")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric(18,2)");
 
                     b.Property<decimal>("AmbientTemperature")
-                        .HasColumnType("decimal(5,2)");
+                        .HasColumnType("numeric(5,2)");
 
                     b.Property<int>("DailyYield")
                         .HasColumnType("int");
 
                     b.Property<decimal>("DcPowerKw")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric(18,2)");
 
                     b.Property<int>("InverterId")
                         .HasColumnType("int");
@@ -665,13 +815,13 @@ namespace TAYF.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("ModuleTemperature")
-                        .HasColumnType("decimal(5,2)");
+                        .HasColumnType("numeric(5,2)");
 
                     b.Property<int>("PlantId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<long>("TotalYield")
                         .HasColumnType("bigint");
@@ -2725,18 +2875,18 @@ namespace TAYF.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("InverterId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("LastProcessedUtc")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'utc'");
 
                     b.HasKey("Id");
 

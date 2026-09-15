@@ -61,22 +61,22 @@ public class TayfDbContext : DbContext, IApplicationDbContext
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(100)
-                .HasColumnType("nvarchar(100)");
+                ;
 
             entity.Property(e => e.Location)
                 .IsRequired()
                 .HasMaxLength(200)
-                .HasColumnType("nvarchar(200)");
+                ;
 
             entity.Property(e => e.CapacityKw)
-                .HasColumnType("decimal(18,2)");
+                .HasColumnType("numeric(18,2)");
 
             entity.Property(e => e.TariffType)
                 .IsRequired();
 
             entity.Property(e => e.TariffRate)
                 .IsRequired()
-                .HasColumnType("decimal(18,4)");
+                .HasColumnType("numeric(18,4)");
 
             entity.Property(e => e.Currency)
                 .IsRequired()
@@ -85,12 +85,12 @@ public class TayfDbContext : DbContext, IApplicationDbContext
 
             entity.Property(e => e.InstallationDate)
                 .IsRequired()
-                .HasColumnType("datetime2");
+                .HasColumnType("timestamp with time zone");
 
             entity.Property(e => e.IsActive)
                 .IsRequired()
                 .HasDefaultValue(true)
-                .HasColumnType("bit");
+                ;
 
                     });
     }
@@ -110,21 +110,21 @@ public class TayfDbContext : DbContext, IApplicationDbContext
             entity.Property(e => e.SerialNumber)
                 .IsRequired()
                 .HasMaxLength(50)
-                .HasColumnType("nvarchar(50)");
+                ;
 
             entity.Property(e => e.Model)
                 .IsRequired()
                 .HasMaxLength(100)
-                .HasColumnType("nvarchar(100)");
+                ;
 
             entity.Property(e => e.MaxPowerKw)
-                .HasColumnType("decimal(18,2)");
+                .HasColumnType("numeric(18,2)");
 
             entity.Property(e => e.InstallationDate)
-                .HasColumnType("datetime2");
+                .HasColumnType("timestamp with time zone");
 
             entity.Property(e => e.IsActive)
-                .HasColumnType("bit")
+                
                 .HasDefaultValue(true);
 
             entity.Property(e => e.PlantId)
@@ -154,10 +154,10 @@ public class TayfDbContext : DbContext, IApplicationDbContext
                 .HasColumnType("int");
 
             entity.Property(e => e.DcPowerKw)
-                .HasColumnType("decimal(18,2)");
+                .HasColumnType("numeric(18,2)");
 
             entity.Property(e => e.AcPowerKw)
-                .HasColumnType("decimal(18,2)");
+                .HasColumnType("numeric(18,2)");
 
             entity.Property(e => e.DailyYield)
                 .HasColumnType("int");
@@ -166,16 +166,16 @@ public class TayfDbContext : DbContext, IApplicationDbContext
                 .HasColumnType("bigint");
 
             entity.Property(e => e.AmbientTemperature)
-                .HasColumnType("decimal(5,2)");
+                .HasColumnType("numeric(5,2)");
 
             entity.Property(e => e.ModuleTemperature)
-                .HasColumnType("decimal(5,2)");
+                .HasColumnType("numeric(5,2)");
 
             entity.Property(e => e.Irradiance)
                 .HasColumnType("int");
 
             entity.Property(e => e.Timestamp)
-                .HasColumnType("datetime2");
+                .HasColumnType("timestamp with time zone");
 
             entity.Property(e => e.InverterId)
                 .HasColumnType("int");
@@ -217,40 +217,40 @@ public class TayfDbContext : DbContext, IApplicationDbContext
                 .HasColumnType("int");
 
             entity.Property(e => e.ExpectedPowerKw)
-                .HasColumnType("decimal(18,2)");
+                .HasColumnType("numeric(18,2)");
 
             entity.Property(e => e.ActualPowerKw)
-                .HasColumnType("decimal(18,2)");
+                .HasColumnType("numeric(18,2)");
 
             entity.Property(e => e.DeviationPct)
-                .HasColumnType("decimal(18,4)");
+                .HasColumnType("numeric(18,4)");
 
             entity.Property(e => e.EnergyLossKwh)
-                .HasColumnType("decimal(18,2)");
+                .HasColumnType("numeric(18,2)");
 
             entity.Property(e => e.EstimatedLoss)
-                .HasColumnType("decimal(18,2)");
+                .HasColumnType("numeric(18,2)");
 
             entity.Property(e => e.AnomalyScore)
-                .HasColumnType("decimal(5,4)");
+                .HasColumnType("numeric(5,4)");
 
             entity.Property(e => e.ConfidenceScore)
-                .HasColumnType("decimal(5,4)");
+                .HasColumnType("numeric(5,4)");
 
             entity.Property(e => e.PrimaryCause)
                 .IsRequired()
                 .HasMaxLength(200)
-                .HasColumnType("nvarchar(200)");
+                ;
 
             entity.Property(e => e.CauseProbabilities)
                 .IsRequired()
                 .HasColumnType("TEXT");
 
             entity.Property(e => e.Timestamp)
-                .HasColumnType("datetime2");
+                .HasColumnType("timestamp with time zone");
 
             entity.Property(e => e.CreatedAt)
-                .HasColumnType("datetime2");
+                .HasColumnType("timestamp with time zone");
 
             entity.Property(e => e.InverterId)
                 .HasColumnType("int");
@@ -262,7 +262,7 @@ public class TayfDbContext : DbContext, IApplicationDbContext
                 .HasColumnType("int");
 
             entity.Property(e => e.IsAnomaly)
-                .HasColumnType("bit");
+                ;
 
             entity.Property(e => e.Currency)
                 .IsRequired()
@@ -306,7 +306,7 @@ public class TayfDbContext : DbContext, IApplicationDbContext
                 .HasColumnType("int");
 
             entity.Property(e => e.Rate)
-                .HasColumnType("decimal(18,4)");
+                .HasColumnType("numeric(18,4)");
 
             entity.Property(e => e.Type)
                 .HasColumnType("int");
@@ -348,13 +348,13 @@ public class TayfDbContext : DbContext, IApplicationDbContext
             entity.Property(e => e.Description)
                 .IsRequired()
                 .HasMaxLength(500)
-                .HasColumnType("nvarchar(500)");
+                ;
 
             entity.Property(e => e.StartedAt)
-                .HasColumnType("datetime2");
+                .HasColumnType("timestamp with time zone");
 
             entity.Property(e => e.CompletedAt)
-                .HasColumnType("datetime2");
+                .HasColumnType("timestamp with time zone");
 
             entity.Property(e => e.InverterId)
                 .HasColumnType("int");
@@ -394,24 +394,24 @@ public class TayfDbContext : DbContext, IApplicationDbContext
             entity.Property(e => e.MaintenanceActionId)
                 .HasColumnType("int");
 
-            entity.Property(e => e.PerformanceBefore).HasColumnType("decimal(18,2)");
-            entity.Property(e => e.PerformanceAfter).HasColumnType("decimal(18,2)");
+            entity.Property(e => e.PerformanceBefore).HasColumnType("numeric(18,2)");
+            entity.Property(e => e.PerformanceAfter).HasColumnType("numeric(18,2)");
 
             entity.Property(e => e.ExpectedPowerKw)
-                .HasColumnType("decimal(18,2)")
+                .HasColumnType("numeric(18,2)")
                 .HasDefaultValue(0m);
 
             entity.Property(e => e.RecoveryPct)
-                .HasColumnType("decimal(5,2)");
+                .HasColumnType("numeric(5,2)");
 
             entity.Property(e => e.IsStable)
-                .HasColumnType("bit");
+                ;
 
             entity.Property(e => e.Verified)
-                .HasColumnType("bit");
+                ;
 
             entity.Property(e => e.VerifiedAt)
-                .HasColumnType("datetime2");
+                .HasColumnType("timestamp with time zone");
 
             entity.HasIndex(e => e.MaintenanceActionId);
 
@@ -439,12 +439,12 @@ public class TayfDbContext : DbContext, IApplicationDbContext
                 .HasColumnType("int");
 
             entity.Property(e => e.LastProcessedUtc)
-                .HasColumnType("datetime2");
+                .HasColumnType("timestamp with time zone");
 
             entity.Property(e => e.UpdatedAt)
-                .HasColumnType("datetime2")
+                .HasColumnType("timestamp with time zone")
                 .ValueGeneratedOnAdd()
-                .HasDefaultValueSql("GETUTCDATE()");
+                .HasDefaultValueSql("NOW() AT TIME ZONE 'utc'");
 
             entity.HasIndex(e => e.InverterId)
                 .IsUnique();
