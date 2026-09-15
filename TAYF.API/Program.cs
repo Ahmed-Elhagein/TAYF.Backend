@@ -62,6 +62,9 @@ builder.Services.AddScoped<ICleaningDecisionService, CleaningDecisionService>();
 // Plant Dashboard
 builder.Services.AddScoped<IPlantDashboardService, PlantDashboardService>();
 
+// Demo Scenario
+builder.Services.AddScoped<IDemoScenarioService, DemoScenarioService>();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("FlutterDev", policy =>
